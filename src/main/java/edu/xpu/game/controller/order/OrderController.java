@@ -5,12 +5,13 @@ import edu.xpu.game.dto.OrderInfoDetailDTO;
 import edu.xpu.game.entity.OrderDetail;
 import edu.xpu.game.entity.OrderMaster;
 import edu.xpu.game.service.order.OrderService;
+import edu.xpu.game.util.JsonUtil;
+import edu.xpu.game.util.ResultVOUtil;
 import edu.xpu.game.vo.ResultVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,18 +25,18 @@ import java.util.List;
  * @Version 1.0
  */
 @Slf4j
-@ResponseBody
 @RestController
 @RequestMapping("/order")
 public class OrderController {
 
     private final OrderService orderService;
 
+
+
     @Autowired
     public OrderController(OrderService orderService) {
         this.orderService = orderService;
     }
-
 
     /**
      * 根据购物车里面的商品创建订单
@@ -59,7 +60,6 @@ public class OrderController {
     }
 
 
-    //TODO 取消订单
     /**
      * 取消订单
      * @param orderMasterId 订单Id
@@ -68,11 +68,25 @@ public class OrderController {
     @RequestMapping("/cancel")
     public String cancel(String orderMasterId, HttpServletRequest request){
         String userId = (String)request.getSession().getAttribute("userInfo");
+        OrderMaster cancelRet = orderService.cancelOrderForUser(orderMasterId, userId);
+        if(cancelRet != null)
+            return JsonUtil.toJson(ResultVOUtil.success(cancelRet));
+        return JsonUtil.toJson(ResultVOUtil.error(1, "取消订单失败"));
+    }
 
+
+    /**
+     * 取消订单（这个是管理员接口）
+     * @param orderMasterId 订单Id
+     * @return 取消订单结果
+     */
+    @RequestMapping("/cancelOrder")
+    public String cancelOrder(String orderMasterId, HttpServletRequest request){
+        String userId = (String)request.getSession().getAttribute("userInfo");
         OrderMaster cancelRet = orderService.cancelOrder(orderMasterId, userId);
-
-
-        return null;
+        if(cancelRet != null)
+            return JsonUtil.toJson(ResultVOUtil.success(cancelRet));
+        return JsonUtil.toJson(ResultVOUtil.error(1, "取消订单失败"));
     }
 
 

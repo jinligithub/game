@@ -1,14 +1,10 @@
 package edu.xpu.game.service.order;
 
-
-
-import edu.xpu.game.dto.OrderInfoDTO;
 import edu.xpu.game.dto.OrderInfoDetailDTO;
 import edu.xpu.game.entity.OrderDetail;
 import edu.xpu.game.entity.OrderMaster;
 
 import javax.servlet.http.HttpServletRequest;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,8 +19,6 @@ public interface OrderService {
 
     OrderInfoDetailDTO createOrder(String userId, HttpServletRequest request);
 
-    BigDecimal amount(String userId);
-
     List<OrderMaster> showAllOrder();
 
     List<OrderDetail> showOrderDetail(String orderMasterId);
@@ -37,7 +31,9 @@ public interface OrderService {
 
     Optional<OrderMaster> findOrderById(String masterOrderId);
 
-    void change(OrderMaster orderMaster);
+    OrderMaster change(OrderMaster orderMaster);
+
+    OrderMaster cancelOrderForUser(String orderMasterId, String userId);
 
     OrderMaster cancelOrder(String orderMasterId, String userId);
 }

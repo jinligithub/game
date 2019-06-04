@@ -5,6 +5,7 @@ import edu.xpu.game.dto.OrderInfoDetailDTO;
 import edu.xpu.game.entity.OrderDetail;
 import edu.xpu.game.entity.OrderMaster;
 import edu.xpu.game.entity.ShoppingCart;
+import edu.xpu.game.entity.UserInfo;
 import edu.xpu.game.enums.OrderStatusEnum;
 import edu.xpu.game.enums.PayStatusEnum;
 import edu.xpu.game.repository.OrderDetailRepository;
@@ -12,13 +13,13 @@ import edu.xpu.game.repository.OrderMasterRepository;
 import edu.xpu.game.repository.ShoppingCartRepository;
 import edu.xpu.game.service.order.OrderService;
 import edu.xpu.game.service.shopping.impl.ShoppingServiceImpl;
+import edu.xpu.game.service.user.UserInfoService;
 import edu.xpu.game.util.KeyUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -35,17 +36,19 @@ public class OrderServiceImpl implements OrderService {
     private final OrderDetailRepository detailRepository;
     private final ShoppingCartRepository shoppingRepository;
     private final ShoppingServiceImpl shoppingServiceImpl;
+    private final UserInfoService userService;
 
     @Autowired
     public OrderServiceImpl(OrderMasterRepository masterRepository,
                             OrderDetailRepository detailRepository,
                             ShoppingCartRepository shoppingRepository,
 
-                            ShoppingServiceImpl shoppingServiceImpl) {
+                            ShoppingServiceImpl shoppingServiceImpl, UserInfoService userService) {
         this.masterRepository = masterRepository;
         this.detailRepository = detailRepository;
         this.shoppingRepository = shoppingRepository;
         this.shoppingServiceImpl = shoppingServiceImpl;
+        this.userService = userService;
     }
 
     /**
@@ -54,8 +57,6 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderInfoDetailDTO createOrder(String userId, HttpServletRequest request) {
         OrderInfoDetailDTO retOrderInfoDetailDTO = new OrderInfoDetailDTO();
-
-        //String userId = (String)request.getSession().getAttribute("userInfo");
 
         OrderMaster orderMaster = new OrderMaster();
         String masterKey = KeyUtil.genUniqueKey();
@@ -86,11 +87,6 @@ public class OrderServiceImpl implements OrderService {
         retOrderInfoDetailDTO.setOrderInfoDTOList(list);
         retOrderInfoDetailDTO.setOrderPrice(orderMaster.getOrderAmount());
         return retOrderInfoDetailDTO;
-    }
-
-    @Override
-    public BigDecimal amount(String userId) {
-        return shoppingServiceImpl.amount(userId);
     }
 
     @Override
@@ -130,23 +126,53 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void change(OrderMaster orderMaster) {
-        masterRepository.save(orderMaster);
+    public OrderMaster change(OrderMaster orderMaster) {
+        return masterRepository.save(orderMaster);
     }
 
+
+    /**
+     * 用户自己取消订单
+     * @param orderMasterId 订单Id
+     * @param userId 用户Id
+     * @return 取消是否成功
+     */
     @Override
-    public OrderMaster cancelOrder(String orderMasterId, String userId) {
+    public OrderMaster cancelOrderForUser(String orderMasterId, String userId) {
         Optional<OrderMaster> byId = masterRepository.findById(orderMasterId);
         if(byId.isPresent()){
             OrderMaster master = byId.get();
-            Integer payStatus = master.getPayStatus();
+            //看看是否是自己的订单
+            if(master.getBuyerId().equalsIgnoreCase(userId)){
+                Integer payStatus = master.getPayStatus();
+                if(PayStatusEnum.SUCCESS.getCode().equals(payStatus)){
+                    //在已经支付的情况下取消订单
+                    master.setOrderStatus(OrderStatusEnum.CANCEL.getCode());
+                    //TODO 支付宝退款相关API
+                }else{
+                    //在未支付的情况下取消订单
+                    master.setOrderStatus(OrderStatusEnum.CANCEL.getCode());
+                }
+                return masterRepository.save(master);
+            }
+        }
+        return null;
+    }
 
-            if(PayStatusEnum.SUCCESS.getCode().equals(payStatus)){
-                //在已经支付的情况下取消订单
-                //
-            }else if(PayStatusEnum.WAIT.getCode().equals(payStatus)){
-                //在未支付的情况下取消订单
-
+    /**
+     * 管理员取消订单的接口
+     * @param orderMasterId 订单Id
+     * @return 取消订单的结果
+     */
+    @Override
+    public OrderMaster cancelOrder(String orderMasterId, String userId) {
+        Optional<UserInfo> byId = userService.findById(userId);
+        if(byId.isPresent() && (byId.get().getUserIsman() == 0)){
+            Optional<OrderMaster> orderMaster = masterRepository.findById(orderMasterId);
+            if(orderMaster.isPresent()){
+                OrderMaster master = orderMaster.get();
+                master.setOrderStatus(OrderStatusEnum.CANCEL.getCode());
+                return masterRepository.save(master);
             }
         }
         return null;
