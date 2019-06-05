@@ -22,7 +22,6 @@ import java.util.Optional;
  * @Version 1.0
  */
 @RestController
-@ResponseBody
 @RequestMapping(value = "/user")
 @Slf4j
 public class UserInfoController {

@@ -21,7 +21,6 @@ import java.util.Optional;
  * @Version 1.0
  */
 @RestController
-@ResponseBody
 @RequestMapping("/product")
 @Slf4j
 public class ProductController {

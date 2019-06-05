@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequestMapping("/category")
-@ResponseBody
 public class CategoryController {
     private final CategoryServiceImpl service;
 

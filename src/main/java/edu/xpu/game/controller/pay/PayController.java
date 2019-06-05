@@ -96,7 +96,7 @@ public class PayController {
 
     @RequestMapping("/paySyncFinish")
     public String paySyncFinishCallback(){
-        return "redirect:http://9t9wb2.natappfree.cc/#/pay";
+        return "redirect:http://ahojcn.natapp1.cc/#/pay";
     }
 
 

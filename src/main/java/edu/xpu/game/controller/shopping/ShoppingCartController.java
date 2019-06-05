@@ -23,7 +23,6 @@ import java.util.*;
  */
 @RequestMapping("/shopping")
 @RestController
-@ResponseBody
 public class ShoppingCartController {
 
     private final ShoppingService shoppingService;
