@@ -2,7 +2,7 @@
 
 [后端服务器地址](http://tim.natapp1.cc)`http://tim.natapp1.cc` 
 
-## 一、使用说明
+## 一、项目使用说明
 
 | 账号                   | 密码   | 身份       |
 | ---------------------- | ------ | ---------- |
@@ -11,17 +11,23 @@
 | 00002                  | 123456 | 普通用户   |
 | cbhgxj3456@sandbox.com | 111111 | 支付宝账户 |
 
-## 二、技术架构
+## 二、服务器技术架构
 
-JavaEE框架：SpringBoot （Spring、SpringMVC、SpringJPA）
-
-
-
-数据库：MySQL
+JavaEE框架：SpringBoot2.1 （Spring、SpringMVC、Spring Data JPA）
 
 
 
-项目管理：Maven + Jenkins + Github
+数据库：MySQL5.7 (game.sql)
 
 
+
+项目管理：Maven3.6 + Jenkins + Github
+
+
+
+## 三、服务器项目架构
+
+
+
+![](https://s2.ax1x.com/2019/06/08/VD6LqJ.png)
 
