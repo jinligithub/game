@@ -15,7 +15,7 @@ import java.util.Optional;
 
 /**
  * @ClassName ProductController
- * @Description
+ * @Description 商品信息控制器
  * @Author tim
  * @Date 2019-05-25 15:29
  * @Version 1.0

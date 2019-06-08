@@ -16,10 +16,9 @@ import java.util.Properties;
  * @author tim
  * @version 1.0
  * @className PropertiesConfig
- * @description
+ * @description 应用启动加载文件
  * @date 2019-05-31 08:07
  */
-/* 应用启动加载文件*/
 @Component
 public class PropertiesConfig implements ApplicationListener {
     //保存加载配置参数

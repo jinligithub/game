@@ -16,4 +16,6 @@ public interface ProductInfoRepository extends JpaRepository<ProductInfo, String
     List<ProductInfo> findAllByCategoryType(Integer categoryType);
 
     List<ProductInfo> findAllByProductNameLike(String productName);
+
+    List<ProductInfo> findAllByCategoryTypeNot(Integer type);
 }

@@ -16,7 +16,7 @@ import java.util.Optional;
 
 /**
  * @ClassName UserInfoController
- * @Description
+ * @Description 用户登录注册控制器
  * @Author tim
  * @Date 2019-05-23 11:49
  * @Version 1.0

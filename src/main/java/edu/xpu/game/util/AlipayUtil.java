@@ -5,7 +5,7 @@ import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.request.AlipayTradePagePayRequest;
-import edu.xpu.game.bean.AlipayBean;
+import edu.xpu.game.entity.AlipayBean;
 import edu.xpu.game.config.PropertiesConfig;
 
 /**

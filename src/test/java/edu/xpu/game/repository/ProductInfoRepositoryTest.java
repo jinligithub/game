@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -95,5 +96,14 @@ public class ProductInfoRepositoryTest {
     @Test
     public void delete(){
         repository.deleteById("1558575338542");
+    }
+
+    @Test
+    public void findOther(){
+        List<ProductInfo> allByCategoryTypeNot = repository.findAllByCategoryTypeNot(3);
+        for(ProductInfo productInfo: allByCategoryTypeNot){
+            System.out.println(productInfo);
+        }
+        assertNotNull(allByCategoryTypeNot);
     }
 }
